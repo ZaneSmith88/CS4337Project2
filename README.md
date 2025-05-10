@@ -1,2 +1,1 @@
-# CS4337Project2
-This is the prolog project regarding the maze problem.
+CS4337 PROJECT 2 README
