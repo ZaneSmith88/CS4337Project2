@@ -20,5 +20,15 @@ through lists, so I must use recursion here.
 You set the parameter of the base case to an empty list so that calling the iterate function with an empty list defaults to the base case rather than the typical variant. The maze is still hard-coded, so I'll move
 it over to be user-input next.
 
+Outputso far:
+Enter a LIST of directions:
+|: [left].
+You entered: [left]
+End of instructions.
+Lose!
+Welcome to SWI-Prolog (threaded, 64 bits, version 9.2.9)
+SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software.
+Please run ?- license. for legal details.
+
 (11:04 AM 5/11) Pre-Session Thoughts: The next and final step of this project will be to implement a path finder if the input path is unbound. I will have to come up with another recursive algorithm for this, one that
 returns the path and uses it, which will be challenging. I know a bit about pathfinding algorithms from an Algorithms and Data structures class, but I'll certainly need a refresher.
