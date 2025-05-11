@@ -11,15 +11,30 @@ NOTE: Atoms or symbols are always lowercase, variables are uppercase.
 
 main:-
     test.
-        
+    
+get_input_path(InputPath) :-
+    format("Enter a LIST of directions:~n"),
+    read(InputPath).
+    
+    
 valid_move(Maze, (Row, Col)) :-
     %nth0 to just grab at index.
     nth0(Row, Maze, CurrRow),
     nth0(Col, CurrRow, CurrCell),
     CurrCell \= w. % Effectively a boolean, returns if CurrCell ISNT a wall.
+    
+    
+test_valid_move(Maze, Position) :-
+    (valid_move(Maze, Position) % if
+        ->  
+            format("~w is valid.~n", [Position])
+        ;   
+            format("~w is NOT valid.~n", [Position])
+    ).
+
 
 test :-
-
+    
     % NOTE: Commas separate goals until the query is closed with a period.
     
     Maze = [
@@ -30,14 +45,11 @@ test :-
     ],
     
     Position = (2, 2),
+    get_input_path(InputPath),
+    format("You entered: ~w~n", [InputPath]),
     
     % If else block ()->;
-    (valid_move(Maze, Position)
-        ->  
-            format("~w is valid.~n", [Position])
-        ;   
-            format("~w is NOT valid.~n", [Position])
-    ).
+    test_valid_move(Maze, Position).
     
     % "." End of query
     
