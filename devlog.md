@@ -20,7 +20,7 @@ through lists, so I must use recursion here.
 You set the parameter of the base case to an empty list so that calling the iterate function with an empty list defaults to the base case rather than the typical variant. The maze is still hard-coded, so I'll move
 it over to be user-input next.
 
-Outputso far:
+Output so far:
 Enter a LIST of directions:
 |: [left].
 You entered: [left]
