@@ -32,3 +32,8 @@ Please run ?- license. for legal details.
 
 (11:04 AM 5/11) Pre-Session Thoughts: The next and final step of this project will be to implement a path finder if the input path is unbound. I will have to come up with another recursive algorithm for this, one that
 returns the path and uses it, which will be challenging. I know a bit about pathfinding algorithms from an Algorithms and Data structures class, but I'll certainly need a refresher.
+
+(7:05 PM 5/11) Post-Session Thoughts: This was a much more difficult system than anticipated, however I got the recursive pathfinding to work! Essentially how it works is that it has its base case of course, that being an empty list, but
+we call cell(Maze, CurrPos, e) NOT to write the cell TO e, but to compare e, since it's an atom, and to return true or false. Otherwise if our direction isn't empty, then the direction attempting system starts to operate. Essentially,
+when we call a predicate with the same param count / arity, upon failing (evaluating to false) it will attempt a call of the following same predicate that was defined after. This leads us to attempt all directions (up, down, left, right), in order, and to
+recursively continue. A clause is included to make sure our next checked tile has not been previously tracked, and with that, it will naturally keep going until a solution is found!
