@@ -13,9 +13,11 @@ main:-
     test.
     
 % Input
-get_input_path(InputPath) :-
-    format("Enter a LIST of directions:~n"),
-    read(InputPath).
+get_input(Maze, InputPath) :-
+    format("Enter a MAZE:~n"),
+    read(Maze),  % Read the maze
+    format("Enter a LIST of directions (Or type unbound to Pathfind):~n"),
+    read(InputPath).  % Read the list of directions
     
     
 % Our move predicates
@@ -52,11 +54,11 @@ test_valid_move(Maze, Position) :-
     ).
     
 
-% A bit like java's overloading vvv
+% Iteration recursion
 iterate([], Maze, Pos) :-
     format("End of instructions.~n"),
     cell(Maze, Pos, LastCellWeReached),
-    (LastCellWeReached == e % if
+    (LastCellWeReached == e
         ->  
             format("Win!")
         ;   
@@ -64,27 +66,65 @@ iterate([], Maze, Pos) :-
     ).
 
 
-% Iteration recursion
 iterate([FirstInstruction|RestInstructions], Maze, CurrPos) :-
     move(FirstInstruction, CurrPos, NextPos),
-    valid_move(Maze, NextPos), 
-    iterate(RestInstructions, Maze, NextPos). % Like Racket with the Cons/Rest structures
+    (valid_move(Maze, NextPos)
+        ->  
+            iterate(RestInstructions, Maze, NextPos) % Like Racket with the Cons/Rest structures
+        ;   
+            format("Lose!"), fail
+    ).
     % NextPos becomes CurrPos...
+
+
+% Getting the starting cell...
+get_start_cell(Maze, StartPos) :-
+    search(Maze, 0, StartPos).
+
+search([Row|RestRows], RowIndex, StartPos) :-
+    (search_row(Row, 0, ColIndex)
+        ->  
+            StartPos = (RowIndex, ColIndex)
+        ;
+            Inc is RowIndex + 1,
+            search(RestRows, Inc, StartPos)
+    ).
+
+search_row([s|_], ColIndex, ColIndex).
+search_row([_|Rest], CurrIndex, ColIndex) :-
+    NextIndex is CurrIndex + 1,
+    search_row(Rest, NextIndex, ColIndex).
+    
+
+% Recursive pathfinding --------->
+pathfind(Maze, CurrPos, _, []) :- %base
+    cell(Maze, CurrPos, e). % Normally returns to e, but since e is an atom it compares, returning true or false.
+pathfind(Maze, CurrPos, Visited, [Direction | Path]) :-
+    move(Direction, CurrPos, NextPos),
+    valid_move(Maze, NextPos),
+    \+ member(NextPos, Visited),  % Nextpos SHOULDNT be a member of visited
+    pathfind(Maze, NextPos, [NextPos | Visited], Path).
+    
+find_path(Maze, StartPos, Path) :-
+    pathfind(Maze, StartPos, [StartPos], Path).
+%--------------------------------------------->
 
 
 test :-
     % NOTE: Commas separate goals until the query is closed with a period.
     
-    Maze = [
-        [w, s, w, w],
-        [w, f, w, w],
-        [w, f, w, w],
-        [w, e, w, w]
-    ],
+    get_input(Maze, InputPath),
+    get_start_cell(Maze, StartPos),
+    %iterate(InputPath, Maze, StartPos).
     
-    get_input_path(InputPath),
-    format("You entered: ~w~n", [InputPath]),
-    iterate(InputPath, Maze, (1,2)).
+    (InputPath == unbound 
+    ->
+        find_path(Maze, StartPos, PFind),
+        format("Path found! ~w~n", [PFind]),
+        iterate(PFind, Maze, StartPos)
+    ;
+        iterate(InputPath, Maze, StartPos)
+    ).
     
     % "." End of query
     
